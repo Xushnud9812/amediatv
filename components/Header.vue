@@ -1,623 +1,771 @@
 <template>
-  <div>
-    <header>
-      <div class="header">
-        <div class="container">
-          <div class="flex">
-            <div class="logo">
-              <a href="#">Amediatv.uz</a>
-              <h2>
-                Birinchi
-                <span>UZ</span> fandab
-              </h2>
-            </div>
-            <div class="catalog">
-              <ul class="flex">
-                <li>
-                  <button @click="clickjanr" v-click-outside="hide1">
-                    Janrlar
-                    <span class>
-                      <fa icon="angle-down" />
-                    </span>
-                  </button>
-                </li>
-                <li>
-                  <button @click="clickyear" v-click-outside="hide2">
-                    Yillar
-                    <span class>
-                      <fa icon="angle-down" />
-                    </span>
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <div class="right flex">
-              <div class="search">
-                <input type="search" placeholder="Saytdan izlash..." />
-                <button>
-                  <fa icon="search" />
+    <div>
+        <div @click="closeModal" v-if="isRegister" class="fixvh"></div>
+        <div v-if="isRegister" class="modal-card" style="width: 400px">
+            <div class="modal-title">
+                <h2>Ro'yxatdan o'tish</h2>
+                <button @click="closeModal">
+                    <fa class="times" icon="times" />
                 </button>
-              </div>
-              <div class="lang flex">
-                <button class="active">uz</button>
-                <span class="line"></span>
-                <button>ru</button>
-              </div>
-              <div class="profil">
-                <button @click="clickLogin" class="flex">
-                  <span class="flex">
-                    <fa icon="user" />
-                  </span> Xushnud
+            </div>
+
+            <div class="modal-body">
+                <div
+                    class="input-form"
+                    :class="{ 'form-error': $v.register.name.$error }"
+                >
+                    <input
+                        v-model="$v.register.name.$model"
+                        type="text"
+                        placeholder="F.I.O"
+                    />
+                    <h6 v-if="!$v.register.name.required" class="error-text">
+                        To'ldirish shart
+                    </h6>
+                </div>
+
+                <div
+                    class="input-form"
+                    :class="{ 'form-error': $v.register.email.$error }"
+                >
+                    <input
+                        v-model="$v.register.email.$model"
+                        type="text"
+                        placeholder="Email"
+                    />
+                    <h6 v-if="!$v.register.email.required" class="error-text">
+                        To'ldirish shart
+                    </h6>
+                    <h6 v-if="!$v.register.email.email" class="error-text">
+                        To'g'ri to'ldiring
+                    </h6>
+                </div>
+                <div
+                    class="input-form"
+                    :class="{ 'form-error': $v.register.phone.$error }"
+                >
+                    <input
+                        type="text"
+                        v-model.trim="$v.register.phone.$model"
+                        autocomplete="off"
+                        placeholder="+998 -- --- -- --"
+                        v-mask="'+998 ## ### ## ##'"
+                    />
+                    <h6 v-if="!$v.register.phone.required" class="error-text">
+                        To'ldirish shart
+                    </h6>
+                    <h6 v-if="!$v.register.phone.minLength" class="error-text">
+                        To'g'ri to'ldiring
+                    </h6>
+                </div>
+                <div
+                    class="input-form"
+                    :class="{ 'form-error': $v.register.password.$error }"
+                >
+                    <div class="input-rel">
+                        <input
+                            name="password"
+                            autocomplete="off"
+                            :type="type"
+                            @focus="handleType"
+                            @blur="handleType"
+                            v-model="$v.register.password.$model"
+                            placeholder="Parolni kiriting"
+                        />
+                        <button
+                            @click="changePasswordVisible"
+                            v-if="type == 'password'"
+                            class="btn-icon"
+                        >
+                            <fa class="icon" icon="eye" />
+                        </button>
+                        <button
+                            @click="changePasswordVisible"
+                            v-else
+                            class="btn-icon"
+                        >
+                            <fa class="icon" icon="eye-slash" />
+                        </button>
+                    </div>
+
+                    <h6
+                        v-if="!$v.register.password.required"
+                        class="error-text"
+                    >
+                        To'ldirish shart
+                    </h6>
+                    <h6
+                        v-if="!$v.register.password.minLength"
+                        class="error-text"
+                    >
+                        To'g'ri to'ldiring
+                    </h6>
+                </div>
+                <div
+                    class="input-form"
+                    :class="{
+                        'form-error':
+                            $v.register.confirmPassword.$error &&
+                            !$v.register.password.$error,
+                    }"
+                >
+                    <div class="input-rel">
+                        <input
+                            v-model="$v.register.confirmPassword.$model"
+                            :type="type"
+                            @focus="handleType"
+                            @blur="handleType"
+                            placeholder="Parolni takrorlang"
+                        />
+                        <button
+                            @click="changePasswordVisible"
+                            v-if="type == 'password'"
+                            class="btn-icon"
+                        >
+                            <fa class="icon" icon="eye" />
+                        </button>
+                        <button
+                            @click="changePasswordVisible"
+                            v-else
+                            class="btn-icon"
+                        >
+                            <fa class="icon" icon="eye-slash" />
+                        </button>
+                    </div>
+
+                    <h6
+                        v-if="
+                            !$v.register.confirmPassword.sameAsPassword &&
+                            !$v.register.password.$error
+                        "
+                        class="error-text"
+                    >
+                        Parolni tasdiqlang
+                    </h6>
+                </div>
+                <div>
+                    <button
+                        @click="registerUser"
+                        class="btn-sm mb-15 w-100 btn-sm-active"
+                    >
+                        Ro'yxatdan o'tish
+                    </button>
+                </div>
+                <div>
+                    <button class="btn-sm w-100" @click="openLogin">
+                        Kirish
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div @click="closeModal" v-if="isLogin" class="fixvh"></div>
+        <div v-if="isLogin" class="modal-card" style="width: 400px">
+            <div class="modal-title">
+                <h2>Kirish</h2>
+                <button @click="closeModal">
+                    <fa class="times" icon="times" />
                 </button>
-              </div>
-              <div class="profil logout">
-                <button class="flex">
-                  <span class="flex">
-                    <fa icon="sign-out-alt" />
-                  </span> Chiqish
-                </button>
-              </div>
             </div>
-          </div>
+
+            <div class="modal-body">
+                <div
+                    class="input-form"
+                    :class="{ 'form-error': $v.login.phone.$error }"
+                >
+                    <input
+                        type="text"
+                        v-model.trim="$v.login.phone.$model"
+                        autocomplete="off"
+                        placeholder="+998 -- --- -- --"
+                        v-mask="'+998 ## ### ## ##'"
+                    />
+                    <h6 v-if="!$v.login.phone.required" class="error-text">
+                        To'ldirish shart
+                    </h6>
+                    <h6 v-if="!$v.login.phone.minLength" class="error-text">
+                        To'g'ri to'ldiring
+                    </h6>
+                </div>
+                <div
+                    class="input-form"
+                    :class="{ 'form-error': $v.login.password.$error }"
+                >
+                    <div class="input-rel">
+                        <input
+                            name="password"
+                            autocomplete="off"
+                            :type="type"
+                            @focus="handleType"
+                            @blur="handleType"
+                            v-model="$v.login.password.$model"
+                            placeholder="Parolni kiriting"
+                        />
+                        <button
+                            @click="changePasswordVisible"
+                            v-if="type == 'password'"
+                            class="btn-icon"
+                        >
+                            <fa class="icon" icon="eye" />
+                        </button>
+                        <button
+                            @click="changePasswordVisible"
+                            v-else
+                            class="btn-icon"
+                        >
+                            <fa class="icon" icon="eye-slash" />
+                        </button>
+                    </div>
+
+                    <h6 v-if="!$v.login.password.required" class="error-text">
+                        To'ldirish shart
+                    </h6>
+                    <h6 v-if="!$v.login.password.minLength" class="error-text">
+                        To'g'ri to'ldiring
+                    </h6>
+                </div>
+                <div>
+                    <button
+                        @click="loginUser"
+                        class="btn-sm mb-15 w-100 btn-sm-active"
+                    >
+                        Kirish
+                    </button>
+                </div>
+                <div>
+                    <button class="btn-sm w-100" @click="openRegister">
+                        Ro'yxatdan o'tish
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
-      <div :class="janr ? 'janr' : 'janr none'">
-        <div class="container">
-          <div class="catalog flex">
-            <div class="name">
-              <nuxt-link to="/">Janr</nuxt-link>
+
+        <header>
+            <div class="site-container">
+                <div class="header-inner">
+                    <div class="header-left">
+                        <nuxt-link :to="{ name: `index___${$i18n.locale}` }">
+                            <span class="logo">
+                                <nuxt-img src="/logo.png" />
+                            </span>
+                        </nuxt-link>
+                    </div>
+                    <div class="header-right">
+                        <div class="header-nav">
+                            <ul>
+                                <li>
+                                    <nuxt-link to="/"
+                                        >Kurslar
+                                        <span class="plus"
+                                            ><fa icon="plus"
+                                        /></span>
+                                        <span class="minus"
+                                            ><fa icon="minus"
+                                        /></span>
+                                    </nuxt-link>
+
+                                    <ul class="dropdown">
+                                        <li>
+                                            <nuxt-link
+                                                :to="{
+                                                    name: `filter___${$i18n.locale}`,
+                                                    query: { category: 1 },
+                                                }"
+                                            >
+                                                <span class="icon-right">
+                                                    <fa icon="angle-right" />
+                                                </span>
+                                                Dasturlash</nuxt-link
+                                            >
+                                        </li>
+                                        <li>
+                                            <nuxt-link
+                                                :to="{
+                                                    name: `filter___${$i18n.locale}`,
+                                                    query: { category: 2 },
+                                                }"
+                                            >
+                                                <span class="icon-right">
+                                                    <fa icon="angle-right" />
+                                                </span>
+                                                Til kurslar</nuxt-link
+                                            >
+                                        </li>
+                                        <li>
+                                            <nuxt-link
+                                                :to="{
+                                                    name: `filter___${$i18n.locale}`,
+                                                    query: { category: 3 },
+                                                }"
+                                            >
+                                                <span class="icon-right">
+                                                    <fa icon="angle-right" />
+                                                </span>
+                                                Biznes</nuxt-link
+                                            >
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <nuxt-link to="/">O'qituvchilar</nuxt-link>
+                                </li>
+                                <li>
+                                    <nuxt-link to="/">Yangiliklar</nuxt-link>
+                                </li>
+                                <li><nuxt-link to="/">About</nuxt-link></li>
+                            </ul>
+                        </div>
+
+                        <div class="header-login">
+                            <button
+                                v-if="!$auth.loggedIn"
+                                class="login"
+                                @click="openLogin"
+                            >
+                                Kirish
+                            </button>
+
+                            <div
+                                v-else
+                                class="profile"
+                                v-click-other="clickOut"
+                            >
+                                <button
+                                    @click="isProfile = true"
+                                    class="profile"
+                                >
+                                    <div class="pro-img">
+                                        <img
+                                            src="https://bestprofilepictures.com/wp-content/uploads/2021/04/Cool-Profile-Picture-986x1024.jpg"
+                                            alt=""
+                                        />
+                                    </div>
+                                    <fa icon="sort-down" />
+                                </button>
+
+                                <div v-if="isProfile" class="pro-dropdown">
+                                    <h6>{{ $auth.user.name }}</h6>
+                                    <ul>
+                                        <li>
+                                            <nuxt-link
+                                                :to="{
+                                                    name: `profile___${$i18n.locale}`,
+                                                }"
+                                            >
+                                                <span>
+                                                    <fa icon="user" />
+                                                </span>
+                                                Profil</nuxt-link
+                                            >
+                                        </li>
+                                        <li>
+                                            <nuxt-link to="/">
+                                                <span>
+                                                    <fa icon="play-circle" />
+                                                </span>
+                                                Kurslar</nuxt-link
+                                            >
+                                        </li>
+                                    </ul>
+                                    <button
+                                        @click="
+                                            $auth.logout();
+                                            isProfile = false;
+                                        "
+                                        class="logout"
+                                    >
+                                        <fa icon="power-off" /> Chiqish
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="name">
-              <nuxt-link to="/">Janr</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">Janr</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">Janr</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">Janr</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">Janr</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">Janr</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">Janr</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">Janr</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">Janr</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">Janr</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">Janr</nuxt-link>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div :class="year ? 'yil' : 'yil none'">
-        <div class="container">
-          <div class="catalog flex">
-            <div class="name">
-              <nuxt-link to="/">2022</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2021</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2020</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2019</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2018</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2017</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2016</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2015</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2014</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2013</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2012</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2011</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2010</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2009</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2008</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2007</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2006</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2005</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2004</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2003</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2002</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">2001</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">1999</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">1998</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">1997</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">1996</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">1995</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">1994</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">1993</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">1992</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">1991</nuxt-link>
-            </div>
-            <div class="name">
-              <nuxt-link to="/">1990</nuxt-link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-    <div class="login-modal">
-      <div @click="isLogin = false" :class="isLogin ? 'fix-vh' : 'fix-vh fix-no'"></div>
-      <div :class="isLogin ? 'open-modal login' : 'login '">
-        <div class="title-mod flex">
-          <h3>Kirish</h3>
-          <span>X</span>
-        </div>
-        <div class="body-mod">
-          <div class="form">
-            <div class="input-form" :class="{ 'form-error': $v.user.email.$error }">
-              <span>Email</span>
-              <input type="email" v-model="$v.user.email.$model" placeholder="Emailni kiriting..." />
-            <h6   v-if="!$v.user.email.required" class="error-text">Maydonni to'ldiring</h6>
-            </div>
-            <div class="input-form" :class="{ 'form-error': $v.user.password.$error }">
-              <span>Parol</span>
-              <input type="email" v-model="$v.user.password.$model" placeholder="Parolni kiriting..." />
-            <h6   v-if="!$v.user.password.required" class="error-text">Maydonni to'ldiring</h6>
-            </div>
-           
-          </div>
-          <div class="btn">
-            <button @click="submitData">Kirish</button>
-          </div>
-          <div class="foot-mod flex">
-            <button @click="clickRegistr">Ro'yhatdan o'tish</button>
-            <button>Parolni tiklash</button>
-          </div>
-        </div>
-      </div>
+        </header>
     </div>
-    <div class="Registr-modal">
-      <div @click="isRegistr = false" :class="isRegistr ? 'fix-vh' : 'fix-vh fix-no'"></div>
-      <div :class="isRegistr ? 'open-registr login' : 'login '">
-        <div class="title-mod flex">
-          <h3>Ro'yhatdan o'tish</h3>
-          <span>X</span>
-        </div>
-        <div class="body-mod">
-          <div class="form">
-            <div class="input-form" :class="{ 'form-error': $v.userinfo.name.$error }">
-              <span>Foydalanuvchining nomi</span>
-              <input type="email" v-model="$v.userinfo.name.$model" placeholder="Ismingizni kiriting..." />
-              <h6   v-if="!$v.userinfo.name.required" class="error-text">Maydonni to'ldiring</h6>
-            </div>
-            <div class="input-form" :class="{ 'form-error': $v.userinfo.email.$error }">
-              <span>Email</span>
-              <input type="email" v-model="$v.userinfo.email.$model" placeholder="Emailni kiriting..." />
-              <h6   v-if="!$v.userinfo.email.required" class="error-text">Maydonni to'ldiring</h6>
-            </div>
-            <div class="input-form" :class="{ 'form-error': $v.userinfo.password.$error }">
-              <span>Parol</span>
-              <input type="password" v-model="$v.userinfo.password.$model" placeholder="Parolni kiriting..." />
-              <h6   v-if="!$v.userinfo.password.required" class="error-text">Maydonni to'ldiring</h6>
-            </div>
-            <div class="input-form" :class="{ 'form-error': $v.userinfo.password.$error }">
-              <span>Parolni tasdiqlang</span>
-              <input type="password" v-model="$v.userinfo.password.$model" placeholder="Parolni tasdiqlang..." />
-              <h6   v-if="!$v.userinfo.password.required" class="error-text">Maydonni to'ldiring</h6>
-            </div>
-          </div>
-          <div class="btn">
-            <button @click="submitData" >Ro'yhatdan o'tish</button>
-          </div>
-          <div class="foot-mod flex">
-            <button @click="clickLogin">Kirish</button>
-            <button>Parolni tiklash</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
-import { required, minLength, helpers } from "vuelidate/lib/validators";
-import Vue from "vue";
-
-Vue.directive("click-outside", {
-  bind: function(el, binding, vnode) {
-    el.clickOutsideEvent = function(event) {
-      // here I check that click was outside the el and his childrens
-      if (!(el === event.target || el.contains(event.target))) {
-        // and if it did, call method provided in attribute value
-        vnode.context[binding.expression](event);
-      }
-    };
-    document.body.addEventListener("click", el.clickOutsideEvent);
-  },
-  unbind: function(el) {
-    document.body.removeEventListener("click", el.clickOutsideEvent);
-  }
-});
+import { required, minLength, sameAs, helpers } from "vuelidate/lib/validators";
+const email = helpers.regex(
+    "alpha",
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+);
 export default {
-  data() {
-    return {
-      user: {
-        email: "",
-        password: ""
-      },
-      userinfo: {
-        name: "",
-        email: "",
-        password: ""
-      },
-      year: false,
-      janr: false,
-      isLogin: false,
-      isRegistr: false
-    };
-  },
-  validations: {
-    user: {
-      email: {
-        required
-      },
-      password: {
-        required
-      }
+    data() {
+        return {
+            isProfile: false,
+            type: "text",
+            visiblePassword: false,
+            register: {
+                name: "",
+                email: "",
+                phone: "",
+                password: "",
+                confirmPassword: "",
+            },
+            login: {
+                phone: "",
+                password: "",
+            },
+        };
     },
-    userinfo: {
-      name: {
-        required
-      },
-      email: {
-        required
-      },
-      password: {
-        required
-      }
-    }
-  },
-  methods: {
-    submitData() {
-      this.$v.$touch();
-      console.log("user", this.user);
+    validations: {
+        register: {
+            name: {
+                required,
+            },
+            // check: {
+            //     checked: value => value === true
+            // },
+            email: {
+                required,
+                email,
+            },
+            phone: {
+                required,
+                minLength: minLength(17),
+            },
+            password: {
+                required,
+                minLength: minLength(6),
+            },
+            confirmPassword: {
+                sameAsPassword: sameAs("password"),
+            },
+        },
+        login: {
+            phone: {
+                required,
+                minLength: minLength(17),
+            },
+            password: {
+                required,
+                minLength: minLength(6),
+            },
+        },
     },
-    hide1() {
-      this.janr = false;
+    computed: {
+        isLogin() {
+            return this.$store.state.isLogin;
+        },
+        isRegister() {
+            return this.$store.state.isRegister;
+        },
     },
-    hide2() {
-      this.year = false;
+    methods: {
+        changePasswordVisible() {
+            if (this.type == "text") {
+                this.type = "password";
+            } else {
+                this.type = "text";
+            }
+        },
+        clickOut() {
+            this.isProfile = false;
+        },
+        formReset() {
+            this.register.name = "";
+            this.register.email = "";
+            this.register.phone = "";
+            this.register.password = "";
+            this.register.confirmPassword = "";
+
+            this.login.phone = "";
+            this.login.password = "";
+
+            this.closeModal();
+            this.$v.login.$reset();
+            this.$v.register.$reset();
+        },
+
+        openLogin() {
+            this.$store.commit("CHANGE_LOGIN", true);
+            this.$store.commit("CHANGE_REGISTER", false);
+        },
+        openRegister() {
+            this.$store.commit("CHANGE_LOGIN", false);
+            this.$store.commit("CHANGE_REGISTER", true);
+        },
+        closeModal() {
+            this.$store.commit("CHANGE_LOGIN", false);
+            this.$store.commit("CHANGE_REGISTER", false);
+        },
+        handleType(event) {
+            const { srcElement, type } = event;
+            const { name, value } = srcElement;
+            if (type === "blur" && !value) {
+                this.type = "text";
+            } else {
+                this.type = "password";
+            }
+        },
+
+        //register method
+        registerUser() {
+            this.$v.register.$touch();
+            if (!this.$v.register.$invalid) {
+                let phone = this.register.phone.replace(/[^0-9]/g, "");
+
+                this.$axios
+                    .$post("user/register", {
+                        name: this.register.name,
+                        email: this.register.email,
+                        phone: phone,
+                        password: this.register.password,
+                    })
+                    .then(async (res) => {
+                        if (res.success) {
+                            try {
+                                let response = await this.$auth.loginWith(
+                                    "local",
+                                    {
+                                        data: {
+                                            phone: this.register.phone,
+                                            password: this.register.password,
+                                        },
+                                    }
+                                );
+
+                                this.formReset();
+                            } catch (err) {
+                                console.log(err);
+                            }
+                        }
+                    });
+            }
+        },
+
+        //login method
+
+        async loginUser() {
+            this.$v.login.$touch();
+            if (!this.$v.login.$invalid) {
+                let phone = this.login.phone.replace(/[^0-9]/g, "");
+                try {
+                    let response = await this.$auth.loginWith("local", {
+                        data: {
+                            phone: phone,
+                            password: this.login.password,
+                        },
+                    });
+                    this.formReset();
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        },
     },
-    clickyear() {
-      this.year = !this.year;
-      this.janr = false;
-    },
-    clickLogin() {
-      this.isLogin = true;
-      this.isRegistr = false;
-    },
-    clickRegistr() {
-      this.isLogin = false;
-      this.isRegistr = true;
-    },
-    clickjanr() {
-      this.janr = !this.janr;
-      this.year = false;
-    }
-  }
 };
 </script>
 
 <style lang="scss" scoped>
-.fix-vh {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: #000;
-  opacity: 0.5;
-  width: 100%;
-  height: 100vh;
-  z-index: 116;
-}
-.fix-no {
-  display: none;
-  opacity: 0;
-}
-.open-modal {
-  top: 40% !important;
-  opacity: 1 !important;
-  transform: translate(-50%, -50%) scale(1) !important;
-}
-.open-registr {
-  z-index: 1000 !important;
-  top: 50% !important;
-  opacity: 1 !important;
-  transform: translate(-50%, -50%) scale(1) !important;
-}
-
-.login {
-  opacity: 0;
-  transition: 0.3s;
-  position: fixed;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  z-index: 10;
-  background: #fff;
-  width: 500px;
-  border-radius: 10px;
-  z-index: 151;
-
-  .title-mod {
-    padding: 15px;
-    border-bottom: 1px solid #c5c5c5;
-    h3 {
-      color: #212529;
-    }
-  }
-  .body-mod {
-    .form {
-      padding: 15px;
-      border-bottom: 1px solid #c5c5c5;
-      .input-form {
+header {
+    padding: 10px 0px;
+    box-shadow: 0px 4px 6px 0px rgb(12 0 46 / 5%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    z-index: 7;
+    div.header-inner {
         display: flex;
-        flex-direction: column;
-          margin-bottom: 20px;
+        justify-content: space-between;
+        align-items: center;
+        span.logo {
+            img {
+                width: 140px;
+            }
+        }
+        div.header-right {
+            display: flex;
+            align-items: center;
+            div.header-nav {
+                ul {
+                    list-style-type: none;
+                    li {
+                        display: inline-block;
+                        margin-left: 30px;
+                        position: relative;
+                        padding: 20px 0px;
+                        a {
+                            display: block;
+                            text-decoration: none;
+                            color: #11142d;
+                            font-size: 16px;
+                            font-weight: 500;
+                            transition: 0.2s;
+                            &:hover {
+                                color: $gc;
+                            }
+                            svg {
+                                font-size: 12px;
+                                font-weight: 400;
+                            }
+                            span.minus {
+                                display: none;
+                            }
+                        }
 
-       
-        span {
-          margin-bottom: 10px;
-          font-size: 18px;
-          font-weight: 600;
-        }
-        input {
-          border-radius: 5px;
-          border: 1px solid #999;
-          padding-left: 10px;
-          width: 100%;
-          height: 40px;
-          &:focus {
-            outline: #6187ad;
-          }
-        }
-      }
-  
-    }
-    .btn {
-      padding: 15px;
-      display: flex;
-      justify-content: center;
-      button {
-        cursor: pointer;
-        padding: 10px 20px;
-        color: #fff;
-        border-radius: 6px;
-        background: #6a2fe3;
-      }
-    }
-    .foot-mod {
-      padding: 15px;
-      padding-top: 0;
-    }
-  }
-}
-.none {
-  height: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: 0 !important;
-  transition: 1s;
-  z-index: 0 !important;
-  .catalog {
-    display: none;
-  }
-}
-header {
-  .janr,
-  .yil {
-    height: fit-content;
-    transition: 0.3s;
-    padding: 20px 0 10px 0;
-    margin-top: 10px;
-    border-top: 1px solid #c5c5c5;
-    z-index: 12;
-    .catalog {
-      flex-wrap: wrap;
-      .name {
-        width: 250px;
-        display: inline-flex;
+                        ul.dropdown {
+                            position: absolute;
+                            display: none;
+                            background-color: #fff;
+                            box-shadow: 0 0 15px 0 rgb(0 0 0 / 10%);
+                            width: 210px;
+                            z-index: 6;
+                            border-radius: 5px;
+                            overflow: hidden;
+                            top: 55px;
+                            li {
+                                display: block;
+                                margin-left: 0px;
+                                border-bottom: 1px solid #f5f5f5;
+                                padding: 0px;
+                                a {
+                                    padding: 10px 20px;
+                                    display: flex;
+                                    transition: 0.2s;
 
-        a {
-          color: #fff;
-          text-decoration: none;
-          display: flex;
-          flex-direction: column;
-          font-size: 14px;
-          font-weight: normal;
-          padding: 5px 0px;
-          margin-bottom: 10px;
-          &::after {
-            content: "";
-            height: 1px;
-            width: 0;
-            background: #fff;
-            transition: 0.2s;
-          }
-        }
-        a:hover {
-          &::after {
-            width: 100%;
-          }
-        }
-      }
-    }
-  }
-}
+                                    span.icon-right {
+                                        margin-left: -10px;
+                                        opacity: 0;
+                                        transition: 0.2s;
+                                        margin-right: 5px;
+                                        font-size: 16px;
+                                    }
+                                    &:hover {
+                                        color: #fff;
+                                        background-color: $gc;
+                                        span.icon-right {
+                                            margin-left: 0px;
+                                            opacity: 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-header {
-  background-color: #6a2fe3;
-  padding: 10px 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 111;
-  .logo {
-    a {
-      text-decoration: none;
-      color: #fff;
-      line-height: 24px;
-      font-size: 24px;
-    }
-    h2 {
-      font-size: 11px;
-      font-weight: 200;
-      color: #cccccc;
-      span {
-        font-weight: 400;
-        margin: 0px 3px;
-        color: #fff;
-      }
-    }
-  }
-  .catalog {
-    ul {
-      li {
-        margin-right: 35px;
-        button {
-          cursor: pointer;
-          font-size: 14px;
-          color: #fff;
-          font-weight: 400;
-          span {
-            margin-left: 3px;
-          }
-        }
-      }
-    }
-  }
-  .right {
-    .search {
-      width: 250px;
-      position: relative;
-      input {
-        width: 100%;
-        background: #fff;
-        padding: 10px;
-        border: 0;
-        border-radius: 5px;
-        padding-right: 35px;
-        &:focus {
-          outline: none;
-        }
-      }
-      button {
-        position: absolute;
-        top: 50%;
-        right: 5px;
-        color: #6a2fe3;
-        transform: translate(0, -50%);
-      }
-    }
-    .lang {
-      margin: 0 20px;
-      span.line {
-        width: 1px;
-        height: 20px;
-        background-color: #fff;
-      }
-      button {
-        padding: 10px;
-        color: #fff;
-      }
-      .active {
-        font-weight: 500;
-      }
-    }
-    button {
-      cursor: pointer;
+                    li:hover {
+                        ul.dropdown {
+                            display: block;
+                        }
 
-      padding: 5px 10px;
-      font-size: 14px;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-    .profil {
-      margin-right: 20px;
-      button {
-        color: #fff;
-        padding: 0;
-        span {
-          color: #fff;
-          margin-right: 8px;
+                        a {
+                            span.minus {
+                                display: inline-block;
+                            }
+                            span.plus {
+                                display: none;
+                            }
+                        }
+                    }
+                }
+            }
+
+            div.header-login {
+                margin-left: 30px;
+                display: flex;
+                button.login {
+                    color: $gc;
+                    font-size: 16px;
+                    color: $gc;
+                    border-radius: 8px;
+                    padding: 10px 20px;
+                    background-color: $gh;
+                    font-weight: 500;
+                    border: 1px solid transparent;
+                    transition: 0.2s;
+
+                    &:hover {
+                        background-color: $gc;
+                        color: #fff;
+                    }
+                }
+
+                div.profile {
+                    display: flex;
+                    position: relative;
+                    button.profile {
+                        display: flex;
+                        align-items: center;
+                        div.pro-img {
+                            position: relative;
+                            width: 45px;
+                            height: 45px;
+                            border-radius: 100%;
+                            overflow: hidden;
+                            img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                            }
+                        }
+                        svg {
+                            font-size: 20px;
+                            margin-left: 5px;
+                            color: $gc;
+                        }
+                    }
+
+                    div.pro-dropdown {
+                        position: absolute;
+                        box-shadow: 0px 0px 30px 0px rgb(0 0 0 / 8%);
+                        right: 0;
+                        top: 60px;
+                        background-color: #fff;
+                        border-radius: 5px;
+                        min-width: 180px;
+                        padding: 5px;
+                        h6 {
+                            font-size: 13px;
+                            margin: 5px 10px;
+                            font-weight: 500;
+                            color: $gc;
+                            border-bottom: 1px solid $gh;
+                            padding-bottom: 5px;
+                        }
+                        ul {
+                            border-bottom: 1px solid $gh;
+                            // margin-bottom: 5px;
+
+                            li {
+                                display: block;
+                                a {
+                                    font-size: 14px;
+                                    color: $tc;
+                                    padding: 8px 10px;
+                                    display: block;
+                                    font-weight: 500;
+                                    border-radius: 5px;
+                                    svg {
+                                        margin-right: 10px;
+                                    }
+
+                                    &:hover {
+                                        background-color: $gh;
+                                        color: $gc;
+                                    }
+                                }
+                            }
+                        }
+
+                        button.logout {
+                            font-size: 14px;
+                            font-weight: 500;
+                            color: rgb(255, 87, 87);
+                            padding: 5px 10px;
+                            display: block;
+                            width: 100%;
+                            text-align: left;
+                        }
+                    }
+                }
+            }
         }
-      }
     }
-    .logout {
-      margin-right: 0;
-    }
-  }
 }
 </style>

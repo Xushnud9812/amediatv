@@ -4,7 +4,10 @@ export default {
         title: "Amedia_client",
         meta: [
             { charset: "utf-8" },
-            { name: "viewport", content: "width=device-width, initial-scale=1" },
+            {
+                name: "viewport",
+                content: "width=device-width, initial-scale=1",
+            },
             { hid: "description", name: "description", content: "" },
             { name: "format-detection", content: "telephone=no" },
         ],
@@ -18,9 +21,10 @@ export default {
     },
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: [{ src: "@/plugins/vue-slick-carousel.js", ssr: false },
-    "@/plugins/vuelidate.js",
-  ],
+    plugins: [
+        { src: "@/plugins/vue-slick-carousel.js", ssr: false },
+        "@/plugins/vuelidate.js",
+    ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -53,10 +57,31 @@ export default {
     modules: [
         // https://go.nuxtjs.dev/axios
         "@nuxtjs/axios",
+        "@nuxtjs/i18n",
         // https://go.nuxtjs.dev/pwa
         "@nuxtjs/pwa",
     ],
-
+    auth: {
+        redirect: {
+            login: "/",
+            logout: "/",
+            callback: "/",
+            home: "/",
+        },
+        strategies: {
+            local: {
+                user: {
+                    property: "data",
+                    autoFetch: true,
+                },
+                endpoints: {
+                    login: { url: "/user/login", method: "post" },
+                    user: { url: "/user/me", method: "get" },
+                    logout: false,
+                },
+            },
+        },
+    },
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {},
 

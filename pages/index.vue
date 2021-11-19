@@ -1,16 +1,12 @@
 <template>
-  <div>
-    <Slider />
-    <Newanime />
-    <Anime />
-  </div>
+    <div></div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {};
-  },
+    data() {
+        return {};
+    },
 };
 </script>
 

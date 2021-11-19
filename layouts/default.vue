@@ -1,21 +1,19 @@
 <template>
-  <div>
-    <Header/>
-    <div class="content">
-
-    <Nuxt/>
+    <div>
+        <Header />
+        <div class="content">
+            <Nuxt />
+        </div>
+        <Footer />
     </div>
-    <Footer/>
-  </div>
 </template>
 
 <script>
-import Header from "../components/Header.vue";
-export default { components: { Header } }
+export default {};
 </script>
 <style lang="scss">
-  .content{
-    padding-top: 61px;
+.content {
+    padding-top: 60px;
     min-height: 500px;
-  }
+}
 </style>
