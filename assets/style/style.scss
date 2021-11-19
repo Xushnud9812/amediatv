@@ -1,37 +1,67 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
-.flex{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-.flexend{
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+h6.error-text {
+    display: none;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+    margin-top: 4px;
+    color: #f94040;
 }
-.flexstart{
-    display: flex;
-    justify-content: flex-start;
+.route-text {
+      
+    a {
+        text-decoration: none;
+      font-size: 30px;
+      color: #000;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 30px;
+      span{
+          color: #6a2fe3;
+      }
+    }
+  }
+div.form-error {
+  input {
+    border: 1px solid #f94040 !important;
+  }
+  h6.error-text {
+    display: block !important;
+  }
 }
-ul{
-    list-style: none;
+.flexend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
-button{
-    cursor: pointer;
-    border: 0;
-    background: transparent;
+.flexstart {
+  display: flex;
+  justify-content: flex-start;
 }
-
+ul {
+  list-style: none;
+}
+button {
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+}
 
 .container {
-    width: 1140px;
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
+  width: 1140px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }

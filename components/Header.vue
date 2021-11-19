@@ -215,17 +215,20 @@
         </div>
         <div class="body-mod">
           <div class="form">
-            <div class="input-form">
+            <div class="input-form" :class="{ 'form-error': $v.user.email.$error }">
               <span>Email</span>
-              <input type="email" placeholder="Emailni kiriting..." />
+              <input type="email" v-model="$v.user.email.$model" placeholder="Emailni kiriting..." />
+            <h6   v-if="!$v.user.email.required" class="error-text">Maydonni to'ldiring</h6>
             </div>
-            <div class="input-form">
+            <div class="input-form" :class="{ 'form-error': $v.user.password.$error }">
               <span>Parol</span>
-              <input type="password" placeholder="Parolni kiriting..." />
+              <input type="email" v-model="$v.user.password.$model" placeholder="Parolni kiriting..." />
+            <h6   v-if="!$v.user.password.required" class="error-text">Maydonni to'ldiring</h6>
             </div>
+           
           </div>
           <div class="btn">
-            <button>Kirish</button>
+            <button @click="submitData">Kirish</button>
           </div>
           <div class="foot-mod flex">
             <button @click="clickRegistr">Ro'yhatdan o'tish</button>
@@ -243,25 +246,29 @@
         </div>
         <div class="body-mod">
           <div class="form">
-            <div class="input-form">
+            <div class="input-form" :class="{ 'form-error': $v.userinfo.name.$error }">
               <span>Foydalanuvchining nomi</span>
-              <input type="email" placeholder="Ismingizni kiriting..." />
+              <input type="email" v-model="$v.userinfo.name.$model" placeholder="Ismingizni kiriting..." />
+              <h6   v-if="!$v.userinfo.name.required" class="error-text">Maydonni to'ldiring</h6>
             </div>
-            <div class="input-form">
+            <div class="input-form" :class="{ 'form-error': $v.userinfo.email.$error }">
               <span>Email</span>
-              <input type="email" placeholder="Emailni kiriting..." />
+              <input type="email" v-model="$v.userinfo.email.$model" placeholder="Emailni kiriting..." />
+              <h6   v-if="!$v.userinfo.email.required" class="error-text">Maydonni to'ldiring</h6>
             </div>
-            <div class="input-form">
+            <div class="input-form" :class="{ 'form-error': $v.userinfo.password.$error }">
               <span>Parol</span>
-              <input type="password" placeholder="Parolni kiriting..." />
+              <input type="password" v-model="$v.userinfo.password.$model" placeholder="Parolni kiriting..." />
+              <h6   v-if="!$v.userinfo.password.required" class="error-text">Maydonni to'ldiring</h6>
             </div>
-            <div class="input-form">
+            <div class="input-form" :class="{ 'form-error': $v.userinfo.password.$error }">
               <span>Parolni tasdiqlang</span>
-              <input type="password" placeholder="Parolni tasdiqlang..." />
+              <input type="password" v-model="$v.userinfo.password.$model" placeholder="Parolni tasdiqlang..." />
+              <h6   v-if="!$v.userinfo.password.required" class="error-text">Maydonni to'ldiring</h6>
             </div>
           </div>
           <div class="btn">
-            <button>Ro'yhatdan o'tish</button>
+            <button @click="submitData" >Ro'yhatdan o'tish</button>
           </div>
           <div class="foot-mod flex">
             <button @click="clickLogin">Kirish</button>
@@ -274,6 +281,7 @@
 </template>
 
 <script>
+import { required, minLength, helpers } from "vuelidate/lib/validators";
 import Vue from "vue";
 
 Vue.directive("click-outside", {
@@ -294,13 +302,47 @@ Vue.directive("click-outside", {
 export default {
   data() {
     return {
+      user: {
+        email: "",
+        password: ""
+      },
+      userinfo: {
+        name: "",
+        email: "",
+        password: ""
+      },
       year: false,
       janr: false,
       isLogin: false,
-      isRegistr: false,
+      isRegistr: false
     };
   },
+  validations: {
+    user: {
+      email: {
+        required
+      },
+      password: {
+        required
+      }
+    },
+    userinfo: {
+      name: {
+        required
+      },
+      email: {
+        required
+      },
+      password: {
+        required
+      }
+    }
+  },
   methods: {
+    submitData() {
+      this.$v.$touch();
+      console.log("user", this.user);
+    },
     hide1() {
       this.janr = false;
     },
@@ -357,7 +399,7 @@ export default {
 .login {
   opacity: 0;
   transition: 0.3s;
-  position: absolute;
+  position: fixed;
   top: 20%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
@@ -381,6 +423,9 @@ export default {
       .input-form {
         display: flex;
         flex-direction: column;
+          margin-bottom: 20px;
+
+       
         span {
           margin-bottom: 10px;
           font-size: 18px;
@@ -390,7 +435,6 @@ export default {
           border-radius: 5px;
           border: 1px solid #999;
           padding-left: 10px;
-          margin-bottom: 20px;
           width: 100%;
           height: 40px;
           &:focus {
@@ -398,6 +442,7 @@ export default {
           }
         }
       }
+  
     }
     .btn {
       padding: 15px;
