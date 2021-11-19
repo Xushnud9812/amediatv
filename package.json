@@ -13,13 +13,9 @@
         "@nuxtjs/pwa": "^3.3.5",
         "core-js": "^3.15.1",
         "nuxt": "^2.15.7",
-<<<<<<< HEAD
         "nuxt-i18n": "^6.28.1",
-        "vue-slick-carousel": "^1.0.6"
-=======
         "vue-slick-carousel": "^1.0.6",
         "vuelidate": "^0.7.6"
->>>>>>> 9651984176c06804f83a7c15b4a6fdc40ed15835
     },
     "devDependencies": {
         "fibers": "^5.0.0",
