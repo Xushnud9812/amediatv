@@ -44,7 +44,7 @@
                 <button>ru</button>
               </div>
               <div class="profil">
-                <button class="flex">
+                <button @click="clickLogin" class="flex">
                   <span class="flex">
                     <fa icon="user" />
                   </span> Xushnud
@@ -206,6 +206,70 @@
         </div>
       </div>
     </header>
+    <div class="login-modal">
+      <div @click="isLogin = false" :class="isLogin ? 'fix-vh' : 'fix-vh fix-no'"></div>
+      <div :class="isLogin ? 'open-modal login' : 'login '">
+        <div class="title-mod flex">
+          <h3>Kirish</h3>
+          <span>X</span>
+        </div>
+        <div class="body-mod">
+          <div class="form">
+            <div class="input-form">
+              <span>Email</span>
+              <input type="email" placeholder="Emailni kiriting..." />
+            </div>
+            <div class="input-form">
+              <span>Parol</span>
+              <input type="password" placeholder="Parolni kiriting..." />
+            </div>
+          </div>
+          <div class="btn">
+            <button>Kirish</button>
+          </div>
+          <div class="foot-mod flex">
+            <button @click="clickRegistr">Ro'yhatdan o'tish</button>
+            <button>Parolni tiklash</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="Registr-modal">
+      <div @click="isRegistr = false" :class="isRegistr ? 'fix-vh' : 'fix-vh fix-no'"></div>
+      <div :class="isRegistr ? 'open-registr login' : 'login '">
+        <div class="title-mod flex">
+          <h3>Ro'yhatdan o'tish</h3>
+          <span>X</span>
+        </div>
+        <div class="body-mod">
+          <div class="form">
+            <div class="input-form">
+              <span>Foydalanuvchining nomi</span>
+              <input type="email" placeholder="Ismingizni kiriting..." />
+            </div>
+            <div class="input-form">
+              <span>Email</span>
+              <input type="email" placeholder="Emailni kiriting..." />
+            </div>
+            <div class="input-form">
+              <span>Parol</span>
+              <input type="password" placeholder="Parolni kiriting..." />
+            </div>
+            <div class="input-form">
+              <span>Parolni tasdiqlang</span>
+              <input type="password" placeholder="Parolni tasdiqlang..." />
+            </div>
+          </div>
+          <div class="btn">
+            <button>Ro'yhatdan o'tish</button>
+          </div>
+          <div class="foot-mod flex">
+            <button @click="clickLogin">Kirish</button>
+            <button>Parolni tiklash</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -231,7 +295,9 @@ export default {
   data() {
     return {
       year: false,
-      janr: false
+      janr: false,
+      isLogin: false,
+      isRegistr: false,
     };
   },
   methods: {
@@ -245,6 +311,14 @@ export default {
       this.year = !this.year;
       this.janr = false;
     },
+    clickLogin() {
+      this.isLogin = true;
+      this.isRegistr = false;
+    },
+    clickRegistr() {
+      this.isLogin = false;
+      this.isRegistr = true;
+    },
     clickjanr() {
       this.janr = !this.janr;
       this.year = false;
@@ -254,6 +328,95 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.fix-vh {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #000;
+  opacity: 0.5;
+  width: 100%;
+  height: 100vh;
+  z-index: 116;
+}
+.fix-no {
+  display: none;
+  opacity: 0;
+}
+.open-modal {
+  top: 40% !important;
+  opacity: 1 !important;
+  transform: translate(-50%, -50%) scale(1) !important;
+}
+.open-registr {
+  z-index: 1000 !important;
+  top: 50% !important;
+  opacity: 1 !important;
+  transform: translate(-50%, -50%) scale(1) !important;
+}
+
+.login {
+  opacity: 0;
+  transition: 0.3s;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  z-index: 10;
+  background: #fff;
+  width: 500px;
+  border-radius: 10px;
+  z-index: 151;
+
+  .title-mod {
+    padding: 15px;
+    border-bottom: 1px solid #c5c5c5;
+    h3 {
+      color: #212529;
+    }
+  }
+  .body-mod {
+    .form {
+      padding: 15px;
+      border-bottom: 1px solid #c5c5c5;
+      .input-form {
+        display: flex;
+        flex-direction: column;
+        span {
+          margin-bottom: 10px;
+          font-size: 18px;
+          font-weight: 600;
+        }
+        input {
+          border-radius: 5px;
+          border: 1px solid #999;
+          padding-left: 10px;
+          margin-bottom: 20px;
+          width: 100%;
+          height: 40px;
+          &:focus {
+            outline: #6187ad;
+          }
+        }
+      }
+    }
+    .btn {
+      padding: 15px;
+      display: flex;
+      justify-content: center;
+      button {
+        cursor: pointer;
+        padding: 10px 20px;
+        color: #fff;
+        border-radius: 6px;
+        background: #6a2fe3;
+      }
+    }
+    .foot-mod {
+      padding: 15px;
+      padding-top: 0;
+    }
+  }
+}
 .none {
   height: 0 !important;
   padding: 0 !important;
