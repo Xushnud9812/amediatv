@@ -16,9 +16,8 @@ export default {
     return {};
   },
 
-  components: { Card }
+  components: { Card },
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
