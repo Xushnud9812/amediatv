@@ -1,27 +1,26 @@
 <template>
   <div>
-
     <div class="card">
       <div class="img">
         <img src="@/assets/img/1.jpg" alt />
         <div class="number">
-          <span>{{card.number}}</span>
+          <span>{{ card.number }}</span>
         </div>
       </div>
       <div class="text">
-        <p>{{card.text}}</p>
-      </div>
+        <p>{{ card.text }}</p>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
 export default {
   props: {
     card: {
-      type: Array
-    }
-  }
+      type: Object,
+    },
+  },
 };
 </script>
 
