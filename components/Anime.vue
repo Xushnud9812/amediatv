@@ -4,11 +4,13 @@
       <div class="container">
         <div class="tab-menu">
           <button
-            :class="tabIndex -1 == i ? 'active' : ''"
+            :class="tabIndex - 1 == i ? 'active' : ''"
             v-for="(item, i) in tabMenus"
             :key="i"
             @click="tabindex(i)"
-          >{{item.title}}</button>
+          >
+            {{ item.title }}
+          </button>
         </div>
         <div class="animes flex" v-if="tabIndex == 1">
           <div class="films" v-for="(item, i) in cards1" :key="i">
@@ -39,103 +41,103 @@ export default {
       tabIndex: 1,
       tabMenus: [
         {
-          title: "ANime1"
+          title: "ANime1",
         },
         {
-          title: "ANime2"
+          title: "ANime2",
         },
         {
-          title: "ANime3"
-        }
+          title: "ANime3",
+        },
       ],
       cards1: [
         {
           number: 12,
           image: "as",
-          text: "Nar1111uto"
+          text: "Nar1111uto",
         },
         {
           number: 12,
           image: "as",
-          text: "Naruto"
+          text: "Naruto",
         },
         {
           number: 12,
           image: "as",
-          text: "Naruto"
+          text: "Naruto",
         },
         {
           number: 12,
           image: "as",
-          text: "Naruto"
+          text: "Naruto",
         },
         {
           number: 12,
           image: "as",
-          text: "Naruto"
-        }
+          text: "Naruto",
+        },
       ],
       cards2: [
         {
           number: 12,
           image: "as",
-          text: "22222222"
+          text: "22222222",
         },
         {
           number: 12,
           image: "as",
-          text: "Naruto"
+          text: "Naruto",
         },
         {
           number: 12,
           image: "as",
-          text: "Naruto"
+          text: "Naruto",
         },
         {
           number: 12,
           image: "as",
-          text: "Naruto"
+          text: "Naruto",
         },
         {
           number: 12,
           image: "as",
-          text: "Naruto"
-        }
+          text: "Naruto",
+        },
       ],
       cards3: [
         {
           number: 12,
           image: "as",
-          text: "Naruto3333333"
+          text: "Naruto3333333",
         },
         {
           number: 12,
           image: "as",
-          text: "Naruto"
+          text: "Naruto",
         },
         {
           number: 12,
           image: "as",
-          text: "Naruto"
+          text: "Naruto",
         },
         {
           number: 12,
           image: "as",
-          text: "Naruto"
+          text: "Naruto",
         },
         {
           number: 12,
           image: "as",
-          text: "Naruto"
-        }
-      ]
+          text: "Naruto",
+        },
+      ],
     };
   },
   methods: {
     tabindex(i) {
       this.tabIndex = i + 1;
-    }
-  }
+    },
+  },
 };
 </script>
 
